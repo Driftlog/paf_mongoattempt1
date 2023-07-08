@@ -29,4 +29,8 @@ public class GameService {
         Optional<Document> game = repo.getGameById(gameId);
         return game;
     }
+
+    public Long getCount() {
+        return repo.getCount();
+    }
 }

@@ -1,5 +1,6 @@
 package sg.edu.nus.iss.paf_mongoattempt1.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,12 +21,19 @@ public class GameUtil {
                     .build();
     }
 
-    public static JsonArray toJsonList(List<Document> documents) {
+    public static JsonObject toJsonList(List<Document> documents, int offset, int limit, long count) {
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
         documents.stream()
             .map(doc -> toJsonObject(doc))
             .forEach(doc -> jsonArrayBuilder.add(doc));
-            return jsonArrayBuilder.build();
+            JsonObject jsonObject = Json.createObjectBuilder()
+                                    .add("games", jsonArrayBuilder.build())
+                                    .add("offset", offset)
+                                    .add("limit", limit)
+                                    .add("total", count)
+                                    .add("timestamp", new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()))
+                                    .build();
+            return jsonObject;
     }
 
     public static JsonObject toGame(Document document) {

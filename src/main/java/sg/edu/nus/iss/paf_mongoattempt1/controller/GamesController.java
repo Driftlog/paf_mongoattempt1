@@ -33,18 +33,7 @@ public class GamesController {
     public JsonObject BrowseGames(@RequestParam(name="offset", defaultValue = "0" ) int offset, 
                             @RequestParam(name="limit", defaultValue = "25") int limit ) {
                                 List<Document> games = svc.getGames(limit, offset);
-                                System.out.println(games + "help");
-                                System.out.println(games + "help");
-                                System.out.println(games + "help");
-                                System.out.println(games + "help");
-                                JsonObject jsonObject = Json.createObjectBuilder()
-                                    .add("games", GameUtil.toJsonList(games))
-                                    .add("offset", offset)
-                                    .add("limit", limit)
-                                    .add("total", games.size())
-                                    .add("timestamp", new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()))
-                                    .build();
-                                return jsonObject;
+                                return GameUtil.toJsonList(games, offset, limit, svc.getCount());
     }
 
     @GetMapping(path = "/games/rank",
@@ -52,14 +41,7 @@ public class GamesController {
     public JsonObject BrowseGameByRank(@RequestParam(name="offset", defaultValue = "0" ) int offset, 
                             @RequestParam(name="limit", defaultValue = "25") int limit ) {
                             List<Document> games = svc.getGamesRanked(limit, offset);
-                                JsonObject jsonObject = Json.createObjectBuilder()
-                                    .add("games", GameUtil.toJsonList(games))
-                                    .add("offset", offset)
-                                    .add("limit", limit)
-                                    .add("total", games.size())
-                                    .add("timestamp", new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()))
-                                    .build();
-                                return jsonObject;
+                            return GameUtil.toJsonList(games, offset, limit, svc.getCount());
     }
 
     @GetMapping(path = "/game/{gameId}")
