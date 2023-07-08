@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import sg.edu.nus.iss.paf_mongoattempt1.model.Game;
 import sg.edu.nus.iss.paf_mongoattempt1.service.GameService;
+import sg.edu.nus.iss.paf_mongoattempt1.util.GameUtil;
 
 @RestController
 @RequestMapping
@@ -31,15 +33,17 @@ public class GamesController {
     public JsonObject BrowseGames(@RequestParam(name="offset", defaultValue = "0" ) int offset, 
                             @RequestParam(name="limit", defaultValue = "25") int limit ) {
                                 List<Document> games = svc.getGames(limit, offset);
+                                System.out.println(games + "help");
+                                System.out.println(games + "help");
+                                System.out.println(games + "help");
+                                System.out.println(games + "help");
                                 JsonObject jsonObject = Json.createObjectBuilder()
-                                    .add("games", games.toString())
+                                    .add("games", GameUtil.toJsonList(games))
                                     .add("offset", offset)
                                     .add("limit", limit)
                                     .add("total", games.size())
                                     .add("timestamp", new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date()))
                                     .build();
-
-                                System.out.println(jsonObject.getInt("limit"));
                                 return jsonObject;
     }
 
@@ -49,7 +53,7 @@ public class GamesController {
                             @RequestParam(name="limit", defaultValue = "25") int limit ) {
                             List<Document> games = svc.getGamesRanked(limit, offset);
                                 JsonObject jsonObject = Json.createObjectBuilder()
-                                    .add("games", games.toString())
+                                    .add("games", GameUtil.toJsonList(games))
                                     .add("offset", offset)
                                     .add("limit", limit)
                                     .add("total", games.size())
@@ -63,11 +67,7 @@ public class GamesController {
         Optional<Document> game = svc.getGameById(gameId);
         
         if (game.isPresent()) {
-            JsonObject jsonObject = Json.createObjectBuilder()
-                                    .add("game", game.toString())
-                                    .build();
-
-            return jsonObject;
+            return GameUtil.toGame(game.get());
         }
 
         JsonObject jsonObject = Json.createObjectBuilder()

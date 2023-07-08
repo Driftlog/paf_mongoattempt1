@@ -25,6 +25,7 @@ public class GamesRepo {
         Criteria criteria1 = new Criteria();
         Query query = Query.query(criteria1).limit(limit).skip(offset);
         query.fields()
+            .include("gid")
             .include("name");
         List<Document> games = template.find(query, Document.class, "games");
         return games;
@@ -34,6 +35,7 @@ public class GamesRepo {
         Criteria criteria2 = new Criteria().where("ranking").exists(true);
         Query query = Query.query(criteria2).with(Sort.by(Direction.DESC, "ranking")).limit(limit).skip(offset);
         query.fields()
+            .include("gid")
             .include("name");
         List<Document> games = template.find(query, Document.class, "games");
         System.out.println(games);
@@ -51,6 +53,12 @@ public class GamesRepo {
 
         return Optional.of(game.get(0));
 
+    }
+
+    public Long getCount() {
+        Query query = new Query();
+        Long count = template.count(query, "games");
+        return count;
     }
 
 }
